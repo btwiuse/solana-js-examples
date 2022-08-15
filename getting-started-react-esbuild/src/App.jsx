@@ -20,6 +20,40 @@ const mx = Metaplex.make(connection);
 console.log(rpcUrl);
 console.log(mx);
 
+function SolBalance() {
+  const [address, setAddress] = useState(
+    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+  );
+  const [balance, setBalance] = useState("?");
+  const fetchBalance = async () => {
+    let sol = await connection.getBalance(new PublicKey(address));
+    sol /= LAMPORTS_PER_SOL;
+    setBalance(sol);
+    console.log(sol);
+  };
+
+  useEffect(() => {
+    fetchBalance();
+  });
+
+  return (
+    <div className="container">
+      <h1 className="title">SOL Balance</h1>
+      <div className="nftForm">
+        <input
+          type="text"
+          value={address}
+          onChange={(event) => setAddress(event.target.value)}
+        />
+        <button onClick={fetchBalance}>Query Balance</button>
+      </div>
+      <div className="nftPreview">
+        <h1>{balance} SOL</h1>
+      </div>
+    </div>
+  );
+}
+
 function TokenBalance() {
   const [address, setAddress] = useState(
     "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
@@ -279,7 +313,7 @@ function App() {
 
   return (
     <div className="App">
-      <TokenBalance />
+      <SolBalance />
 
       <hr />
 
