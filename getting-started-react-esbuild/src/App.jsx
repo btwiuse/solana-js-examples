@@ -106,7 +106,7 @@ function Airdrop() {
   };
 
   useEffect(() => {
-    fetchAirdrop();
+    // fetchAirdrop();
   });
 
   return (
