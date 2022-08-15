@@ -6,6 +6,13 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
 } from "@solana/web3.js";
+import {
+  createTransferCheckedInstruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  getMint,
+} from "@solana/spl-token";
+
 import "./App.css";
 
 const BASE = "orp.edonkiuq.revocsid.tenved-analos".split("").reverse().join("");
@@ -59,11 +66,24 @@ function TokenBalance() {
     "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
   );
   const [balance, setBalance] = useState("?");
+  const [ata, setAta] = useState("");
+
+  const fetchATA = async () => {
+    let acc = await getAssociatedTokenAddress(
+      new PublicKey("tkRGmpgBHtvR8rksXxMZ4y5GQnVFFx7jywKwkWHX3Tq"),
+      new PublicKey(address),
+    );
+    console.log("ata", acc.toString());
+    setAta(() => acc.toString());
+  };
+
   const fetchBalance = async () => {
-    let sol = await connection.getBalance(new PublicKey(address));
-    sol /= LAMPORTS_PER_SOL;
-    setBalance(sol);
-    console.log(sol);
+    if (address == "") return;
+    await fetchATA();
+    if (ata == "") return;
+    let tok = await connection.getTokenAccountBalance(new PublicKey(ata));
+    console.log("tok", tok.value.decimals, tok.value.amount);
+    setBalance(tok.value.amount / 10 ** tok.value.decimals);
   };
 
   useEffect(() => {
@@ -72,7 +92,7 @@ function TokenBalance() {
 
   return (
     <div className="container">
-      <h1 className="title">SOL Balance</h1>
+      <h1 className="title">Token Balance</h1>
       <div className="nftForm">
         <input
           type="text"
@@ -82,7 +102,10 @@ function TokenBalance() {
         <button onClick={fetchBalance}>Query Balance</button>
       </div>
       <div className="nftPreview">
-        <h1>{balance} SOL</h1>
+        <h1>ATA: {ata}</h1>
+      </div>
+      <div className="nftPreview">
+        <h1>{balance} OBS</h1>
       </div>
     </div>
   );
@@ -318,6 +341,10 @@ function App() {
       <hr />
 
       <Airdrop />
+
+      <hr />
+
+      <TokenBalance />
 
       <hr />
 
