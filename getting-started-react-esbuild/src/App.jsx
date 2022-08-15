@@ -61,6 +61,38 @@ function SolBalance() {
   );
 }
 
+function PhantomWallet() {
+  const [address, setAddress] = useState("");
+
+  const connect = async () => {
+    if (!solana) {
+      alert("No Phantom wallet found");
+      return;
+    }
+    const { publicKey } = await solana.connect();
+    console.log("address", publicKey.toString());
+    setAddress(publicKey.toString());
+  };
+
+  useEffect(() => {
+    connect();
+  });
+
+  return (
+    <div className="container">
+      <h1 className="title">Phantom Wallet</h1>
+      <div className="nftForm">
+        <button onClick={connect}>
+          {solana.publicKey ? "Connected" : "Connect"}
+        </button>
+      </div>
+      <div className="nftPreview">
+        <h1>Address: {address}</h1>
+      </div>
+    </div>
+  );
+}
+
 function TokenBalance() {
   const [address, setAddress] = useState(
     "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
@@ -336,6 +368,10 @@ function App() {
 
   return (
     <div className="App">
+      <PhantomWallet />
+
+      <hr />
+
       <SolBalance />
 
       <hr />
