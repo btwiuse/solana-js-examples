@@ -12,6 +12,8 @@ import {
   getAssociatedTokenAddress,
   getMint,
 } from "@solana/spl-token";
+import { createTransfer } from "@solana/pay";
+import BigNumber from "bignumber.js";
 
 import "./App.css";
 
@@ -88,6 +90,71 @@ function PhantomWallet() {
       </div>
       <div className="nftPreview">
         <h1>Address: {address}</h1>
+      </div>
+    </div>
+  );
+}
+
+function TokenTransfer() {
+  const [sender, setSender] = useState(
+    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+  );
+  const [recipient, setRecipient] = useState(
+    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+  );
+  const [amount, setAmount] = useState(
+    "1",
+  );
+  const [result, setResult] = useState(null);
+
+  const transfer = async () => {
+    const tx = await createTransfer(connection, new PublicKey(sender), {
+      recipient: new PublicKey(recipient),
+      amount: new BigNumber(amount),
+      splToken: new PublicKey("tkRGmpgBHtvR8rksXxMZ4y5GQnVFFx7jywKwkWHX3Tq"),
+      memo: "btwiuse-solana-pay",
+    }, { commitment: "finalized" });
+
+    console.log("tx", tx);
+
+    const result = await solana.signAndSendTransaction(tx);
+    console.log("result", result);
+
+    setResult(result);
+  };
+
+  return (
+    <div className="container">
+      <h1 className="title">From</h1>
+      <div className="nftForm">
+        <input
+          type="text"
+          value={sender}
+          onChange={(event) => setSender(event.target.value)}
+        />
+      </div>
+      <h1 className="title">To</h1>
+      <div className="nftForm">
+        <input
+          type="text"
+          value={recipient}
+          onChange={(event) => setRecipient(event.target.value)}
+        />
+      </div>
+      <h1 className="title">Amount</h1>
+      <div className="nftForm">
+        <input
+          type="text"
+          value={amount}
+          onChange={(event) => setAmount(event.target.value)}
+        />
+      </div>
+      <h1 className="title">Transfer</h1>
+      <div className="nftForm">
+        <button onClick={transfer}>Transfer Token</button>
+      </div>
+      <div className="nftPreview">
+        <textarea value={`${JSON.stringify(result, null, "  ")}`}></textarea>
       </div>
     </div>
   );
@@ -381,6 +448,10 @@ function App() {
       <hr />
 
       <TokenBalance />
+
+      <hr />
+
+      <TokenTransfer />
 
       <hr />
 

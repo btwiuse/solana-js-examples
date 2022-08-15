@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@metaplex-foundation/js": "latest",
+    "@solana/pay": "^0.2.1",
     "@solana/spl-token": "^0.2",
     "@solana/web3.js": "latest",
     "esbuild": "^0.14.48",
