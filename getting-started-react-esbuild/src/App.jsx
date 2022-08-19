@@ -26,12 +26,16 @@ const rpcWsUrl = `wss://late-weathered-water.${BASE}`;
 const connection = new Connection(rpcUrl, { wsEndpoint: rpcWsUrl });
 const mx = Metaplex.make(connection);
 
+const TOKEN = "tkRGmpgBHtvR8rksXxMZ4y5GQnVFFx7jywKwkWHX3Tq"
+const ADDRESS = "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T"
+const RECIPIENT = "idgq2kjH2vZn1XgsK8NZnqVYnCfkFDbSBJZ2pgj2zfY"
+
 console.log(rpcUrl);
 console.log(mx);
 
 function SolBalance() {
   const [address, setAddress] = useState(
-    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+    ADDRESS,
   );
   const [balance, setBalance] = useState("?");
   const fetchBalance = async () => {
@@ -97,10 +101,10 @@ function PhantomWallet() {
 
 function TokenTransfer() {
   const [sender, setSender] = useState(
-    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+    ADDRESS,
   );
   const [recipient, setRecipient] = useState(
-    "idgq2kjH2vZn1XgsK8NZnqVYnCfkFDbSBJZ2pgj2zfY",
+    RECIPIENT,
   );
   const [amount, setAmount] = useState(
     "1",
@@ -111,7 +115,7 @@ function TokenTransfer() {
     const tx = await createTransfer(connection, new PublicKey(sender), {
       recipient: new PublicKey(recipient),
       amount: new BigNumber(amount),
-      splToken: new PublicKey("tkRGmpgBHtvR8rksXxMZ4y5GQnVFFx7jywKwkWHX3Tq"),
+      splToken: new PublicKey(TOKEN),
       memo: "btwiuse-solana-pay",
     }, { commitment: "finalized" });
 
@@ -162,14 +166,14 @@ function TokenTransfer() {
 
 function TokenBalance() {
   const [address, setAddress] = useState(
-    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+    ADDRESS,
   );
   const [balance, setBalance] = useState("?");
   const [ata, setAta] = useState("");
 
   const fetchATA = async () => {
     let acc = await getAssociatedTokenAddress(
-      new PublicKey("tkRGmpgBHtvR8rksXxMZ4y5GQnVFFx7jywKwkWHX3Tq"),
+      new PublicKey(TOKEN),
       new PublicKey(address),
     );
     console.log("ata", acc.toString());
@@ -212,7 +216,7 @@ function TokenBalance() {
 
 function Airdrop() {
   const [address, setAddress] = useState(
-    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+    ADDRESS,
   );
   const [status, setStatus] = useState("idle");
   const fetchAirdrop = async () => {
@@ -359,7 +363,7 @@ function FetchNfts() {
 
 function FetchNftsByOwner() {
   const [ownerAddress, setOwnerAddress] = useState(
-    "9pRuFihkuA5wzP75xWDoLuLpBhehANoZLrGrySNQRD7T",
+    ADDRESS,
   );
 
   const [ownerNfts, setOwnerNfts] = useState(null);
